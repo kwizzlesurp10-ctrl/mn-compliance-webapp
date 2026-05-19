@@ -2,29 +2,43 @@ name: CI
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   pull_request:
-    branches: [main, master]
-
-defaults:
-  run:
-    working-directory: mn-compliance-webapp
+    branches: [main]
 
 jobs:
-  check:
+  ci:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: "22"
-          cache: npm
+          node-version: '20'
+          cache: 'npm'
           cache-dependency-path: mn-compliance-webapp/package-lock.json
-      - name: Install
+
+      - name: Install dependencies
+        working-directory: mn-compliance-webapp
         run: npm ci
+
       - name: Lint
+        working-directory: mn-compliance-webapp
         run: npm run lint
-      - name: Test
-        run: npm run test
+
+      - name: Type check
+        working-directory: mn-compliance-webapp
+        run: npx tsc --noEmit
+
+      - name: Run tests
+        working-directory: mn-compliance-webapp
+        run: npm test
+
       - name: Build
+        working-directory: mn-compliance-webapp
         run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
