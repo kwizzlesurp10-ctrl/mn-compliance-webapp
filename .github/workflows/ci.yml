@@ -27,7 +27,7 @@ jobs:
 
       - name: Lint
         working-directory: mn-compliance-webapp
-        run: npm run lint
+        run: npx eslint .
 
       - name: Type check
         working-directory: mn-compliance-webapp
