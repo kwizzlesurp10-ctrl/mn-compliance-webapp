@@ -1,16 +1,21 @@
-"use server";
+'use server';
 
-import { generateMockResults } from "@/lib/compliance/generate-mock-results";
-import { complianceCheckInputSchema } from "@/lib/compliance/schema";
-import type { ComplianceResult } from "@/lib/compliance/types";
-import { err, ok, type Result } from "@/lib/result";
+import { complianceSchema } from '@/lib/compliance/schema';
+import type { ComplianceInput, ComplianceResult } from '@/lib/compliance/types';
+import { generateMockResults } from '@/lib/compliance/generate-mock-results';
 
-export async function runComplianceCheckAction(
-  input: unknown,
-): Promise<Result<ComplianceResult, string>> {
-  const parsed = complianceCheckInputSchema.safeParse(input);
-  if (!parsed.success) {
-    return err(parsed.error.issues.map((i) => i.message).join("; "));
+export async function runComplianceCheck(
+  input: unknown
+): Promise<{ success: true; result: ComplianceResult } | { success: false; error: string }> {
+  try {
+    const validated = complianceSchema.parse(input);
+    const result = generateMockResults(validated);
+    return { success: true, result };
+  } catch (error) {
+    console.error('Compliance check failed:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
   }
-  return ok(generateMockResults(parsed.data));
 }

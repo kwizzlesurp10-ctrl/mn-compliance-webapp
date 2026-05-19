@@ -1,38 +1,14 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-const businessTypeSchema = z.enum([
-  "restaurant",
-  "retail",
-  "freelance",
-  "ecommerce",
-  "salon",
-  "contractor",
-  "other",
-]);
-
-const locationSchema = z.enum([
-  "minneapolis",
-  "stpaul",
-  "duluth",
-  "rochester",
-  "bloomington",
-  "other-metro",
-  "greater-mn",
-]);
-
-const revenueSchema = z.enum([
-  "under-50k",
-  "50k-150k",
-  "150k-500k",
-  "500k-2m",
-  "over-2m",
-]);
-
-export const complianceCheckInputSchema = z.object({
-  businessType: businessTypeSchema,
-  location: locationSchema,
-  employees: z.coerce.number().int().min(1).max(500),
-  revenue: revenueSchema,
+export const complianceSchema = z.object({
+  businessName: z.string().min(2, 'Business name is required'),
+  industry: z.string().min(2, 'Industry is required'),
+  employeeCount: z.number().min(0).max(10000),
+  annualRevenue: z.number().min(0),
+  hasEmployeesInMN: z.boolean(),
+  offersBenefits: z.boolean(),
+  handlesPersonalData: z.boolean(),
+  sellsPhysicalGoods: z.boolean(),
 });
 
-export type ComplianceCheckInput = z.infer<typeof complianceCheckInputSchema>;
+export type ComplianceInput = z.infer<typeof complianceSchema>;
