@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { generateGrokPrompt } from '@/lib/compliance/grok-prompt';
 import type { ComplianceInput } from '@/lib/compliance/types';
 
 interface GrokPromptModalProps {
@@ -11,7 +10,19 @@ interface GrokPromptModalProps {
 
 export function GrokPromptModal({ input, onClose }: GrokPromptModalProps) {
   const [copied, setCopied] = useState(false);
-  const prompt = generateGrokPrompt(input);
+
+  const prompt = `You are an expert on Minnesota business regulations.
+
+Business Name: ${input.businessName}
+Industry: ${input.industry}
+Employee Count: ${input.employeeCount}
+Annual Revenue: $${input.annualRevenue}
+Has employees in MN: ${input.hasEmployeesInMN}
+Offers benefits: ${input.offersBenefits}
+Handles personal data: ${input.handlesPersonalData}
+Sells physical goods: ${input.sellsPhysicalGoods}
+
+Provide a compliance assessment.`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(prompt);

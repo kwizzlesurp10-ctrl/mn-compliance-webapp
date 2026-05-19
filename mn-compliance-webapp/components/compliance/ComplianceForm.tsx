@@ -13,7 +13,7 @@ export function ComplianceForm({ onSubmit, isLoading }: ComplianceFormProps) {
   const [formData, setFormData] = useState<Partial<ComplianceInput>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleChange = (field: keyof ComplianceInput, value: any) => {
+  const handleChange = (field: keyof ComplianceInput, value: string | number | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
