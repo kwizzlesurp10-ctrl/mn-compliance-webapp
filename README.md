@@ -5,13 +5,13 @@ This repository contains a production-ready Next.js application for Minnesota sm
 ## Repository Structure
 
 ```
-/home/keef/                              # Git repository root
+repo-root/
 ├── .github/
 │   ├── workflows/
 │   │   └── ci.yml                       # CI: lint, type-check, test, build
 │   ├── dependabot.yml
 │   └── RELEASE_CHECKLIST.md
-├── mn-compliance-webapp/                # The Next.js application
+├── webapp/                              # The Next.js application (was mn-compliance-webapp/)
 │   ├── app/
 │   │   ├── actions/compliance.ts        # Server actions
 │   │   ├── layout.tsx                   # Root layout + Vercel Analytics
@@ -39,14 +39,14 @@ This repository contains a production-ready Next.js application for Minnesota sm
 
 ## Why This Structure?
 
-- The Next.js app lives in `mn-compliance-webapp/` so the repository root can contain shared CI, GitHub configuration, and potentially other tools in the future.
+- The Next.js app lives in `webapp/` so the repository root can contain shared CI, GitHub configuration, and potentially other tools in the future.
 - This is a common **monorepo-lite** pattern for Vercel + GitHub projects.
-- All commands in CI and deployment are scoped to the `mn-compliance-webapp` directory.
+- We chose `webapp/` (instead of repeating the repo name) to avoid confusing long paths in CI runners and keep things clear.
 
 ## Local Development
 
 ```bash
-cd mn-compliance-webapp
+cd webapp
 npm install
 npm run dev
 ```
@@ -56,7 +56,7 @@ Open http://localhost:3000
 ## Deployment (Vercel)
 
 1. In Vercel, import this repository.
-2. Set **Root Directory** to: `mn-compliance-webapp`
+2. Set **Root Directory** to: `webapp`
 3. Vercel will automatically detect Next.js and run `npm install` + `npm run build` inside that folder.
 4. (Recommended) Add environment variable:
    - `NEXT_PUBLIC_SITE_URL` = your production URL
@@ -70,7 +70,7 @@ The workflow (`.github/workflows/ci.yml`) runs on every push and PR:
 - Runs Vitest tests
 - Builds the production bundle
 
-All steps use `working-directory: mn-compliance-webapp`.
+All steps use `working-directory: webapp`.
 
 ## Production Readiness
 
@@ -83,9 +83,9 @@ This repo includes:
 - Zod validation + server actions
 - Type-safe, tested codebase
 
-See `mn-compliance-webapp/README.md` for full app documentation.
+See `webapp/README.md` for full app documentation.
 
 ## Notes
 
-- `.gitignore` is configured so only the relevant folders are tracked (the rest of the home directory is ignored).
+- `.gitignore` is configured so only the relevant folders are tracked.
 - If you add another top-level project later, extend `.gitignore` accordingly.
