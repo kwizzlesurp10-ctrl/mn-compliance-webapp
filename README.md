@@ -1,29 +1,91 @@
-# keef (home)
+# MN Compliance Webapp Monorepo
 
-This repository’s root is `/home/keef`. The deployable **Next.js** app lives in:
+This repository contains a production-ready Next.js application for Minnesota small business compliance checks.
 
-**`mn-compliance-webapp/`** — see that folder’s [README](mn-compliance-webapp/README.md) for local dev, stack, and tests.
+## Repository Structure
 
-`.gitignore` is set so **only** `mn-compliance-webapp/`, `.github/`, `README.md`, and `.gitignore` are tracked at the top level (so the rest of your home directory is not pulled into Git by accident). If you add another top-level project, extend `.gitignore` with `!/other-folder/` and `!/other-folder/**`.
-
-## GitHub
-
-Initialize or connect the remote from the **repository root** (`/home/keef`):
-
-```bash
-cd /home/keef
-git init
-git add .
-git commit -m "Add MN Compliance webapp in mn-compliance-webapp"
-git remote add origin https://github.com/<you>/<repo>.git
-git branch -M main
-git push -u origin main
+```
+/home/keef/                              # Git repository root
+├── .github/
+│   ├── workflows/
+│   │   └── ci.yml                       # CI: lint, type-check, test, build
+│   ├── dependabot.yml
+│   └── RELEASE_CHECKLIST.md
+├── mn-compliance-webapp/                # The Next.js application
+│   ├── app/
+│   │   ├── actions/compliance.ts        # Server actions
+│   │   ├── layout.tsx                   # Root layout + Vercel Analytics
+│   │   └── page.tsx
+│   ├── components/
+│   │   ├── compliance/                  # Refactored, production-grade components
+│   │   │   ├── ComplianceForm.tsx
+│   │   │   ├── ProtectionRadar.tsx
+│   │   │   ├── ResultsDisplay.tsx
+│   │   │   ├── GrokPromptModal.tsx
+│   │   │   └── index.ts
+│   │   └── mn-compliance-home.tsx
+│   ├── lib/compliance/
+│   │   ├── schema.ts                    # Zod validation
+│   │   ├── types.ts
+│   │   ├── grok-prompt.ts
+│   │   └── generate-mock-results.ts
+│   ├── public/
+│   ├── next.config.ts                   # outputFileTracingRoot for monorepo
+│   ├── package.json
+│   └── README.md                        # App-specific documentation
+├── README.md                            # This file
+└── .gitignore
 ```
 
-## Vercel
+## Why This Structure?
 
-When importing the repo, set the **Root Directory** to `mn-compliance-webapp` (Project → Settings → General). Vercel will run `npm install` and `npm run build` there. Add `NEXT_PUBLIC_SITE_URL` in that project if you use the Open Graph `metadataBase` in the app.
+- The Next.js app lives in `mn-compliance-webapp/` so the repository root can contain shared CI, GitHub configuration, and potentially other tools in the future.
+- This is a common **monorepo-lite** pattern for Vercel + GitHub projects.
+- All commands in CI and deployment are scoped to the `mn-compliance-webapp` directory.
 
-## CI
+## Local Development
 
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs lint, test, and build with `working-directory: mn-compliance-webapp`.
+```bash
+cd mn-compliance-webapp
+npm install
+npm run dev
+```
+
+Open http://localhost:3000
+
+## Deployment (Vercel)
+
+1. In Vercel, import this repository.
+2. Set **Root Directory** to: `mn-compliance-webapp`
+3. Vercel will automatically detect Next.js and run `npm install` + `npm run build` inside that folder.
+4. (Recommended) Add environment variable:
+   - `NEXT_PUBLIC_SITE_URL` = your production URL
+
+## CI / GitHub Actions
+
+The workflow (`.github/workflows/ci.yml`) runs on every push and PR:
+
+- Installs dependencies
+- Runs lint + TypeScript check
+- Runs Vitest tests
+- Builds the production bundle
+
+All steps use `working-directory: mn-compliance-webapp`.
+
+## Production Readiness
+
+This repo includes:
+
+- Dependabot configuration
+- Release checklist
+- Vercel Analytics + Speed Insights
+- Clean component architecture (refactored from a 649-line file)
+- Zod validation + server actions
+- Type-safe, tested codebase
+
+See `mn-compliance-webapp/README.md` for full app documentation.
+
+## Notes
+
+- `.gitignore` is configured so only the relevant folders are tracked (the rest of the home directory is ignored).
+- If you add another top-level project later, extend `.gitignore` accordingly.
