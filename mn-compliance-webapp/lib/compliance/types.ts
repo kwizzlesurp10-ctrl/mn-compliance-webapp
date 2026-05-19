@@ -1,44 +1,29 @@
-export type BusinessType =
-  | "restaurant"
-  | "retail"
-  | "freelance"
-  | "ecommerce"
-  | "salon"
-  | "contractor"
-  | "other";
+export interface ComplianceInput {
+  businessName: string;
+  industry: string;
+  employeeCount: number;
+  annualRevenue: number;
+  hasEmployeesInMN: boolean;
+  offersBenefits: boolean;
+  handlesPersonalData: boolean;
+  sellsPhysicalGoods: boolean;
+}
 
-export type LocationKey =
-  | "minneapolis"
-  | "stpaul"
-  | "duluth"
-  | "rochester"
-  | "bloomington"
-  | "other-metro"
-  | "greater-mn";
-
-export type RevenueBand =
-  | "under-50k"
-  | "50k-150k"
-  | "150k-500k"
-  | "500k-2m"
-  | "over-2m";
-
-export type LicenseStatus = "active" | "missing";
-
-export interface LicenseItem {
+export interface ComplianceCategory {
   name: string;
-  status: LicenseStatus;
-  expires: string;
-  cost: string;
+  score: number;
+  status: 'compliant' | 'warning' | 'non-compliant';
+  notes: string;
 }
 
 export interface ComplianceResult {
-  score: number;
-  items: LicenseItem[];
-  annualCost: number;
-  actions: string[];
-  businessType: BusinessType;
-  location: LocationKey;
-  employees: number;
-  revenue: RevenueBand;
+  overallScore: number;
+  summary: string;
+  categories: ComplianceCategory[];
+  checklist: Array<{
+    requirement: string;
+    passed: boolean;
+    details?: string;
+  }>;
+  recommendations: string[];
 }
