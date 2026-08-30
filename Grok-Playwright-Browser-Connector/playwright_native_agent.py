@@ -445,10 +445,17 @@ Example flow for research:
 
             actions = self._parse_actions(response)
             if not actions:
-                # Probably the final natural language answer
-                print("\n=== Final Answer (no more actions) ===")
-                print(response)
-                break
+                # Only treat as final if explicit marker or the repo URL is mentioned
+                if "FINAL" in response.upper() or ("github.com/" in response.lower() and "hello-world-basic" in response.lower()):
+                    print("\n=== Final Answer (no more actions) ===")
+                    print(response)
+                    break
+                else:
+                    # Force continue
+                    snap = self.browser.snapshot()
+                    self.conversation.append({"role": "user", "content": f"Task not complete. Current snapshot:\n{snap[:1200]}\nKeep using keyboard and mouse_click(ref) until repo created and files added. Output next actions."})
+                    print("No new actions but no final marker - forcing continue with fresh snapshot...")
+                    continue
 
             for action in actions:
                 if self.narrate:

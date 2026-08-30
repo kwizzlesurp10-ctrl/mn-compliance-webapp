@@ -4,18 +4,18 @@
 !/README.md
 !/.github/
 !/.github/**
-!/mn-compliance-webapp/
-!/mn-compliance-webapp/**
+!/webapp/
+!/webapp/**
 
 # Next / Node (inside app)
-mn-compliance-webapp/node_modules/
-mn-compliance-webapp/.next/
-mn-compliance-webapp/out/
-mn-compliance-webapp/coverage/
-mn-compliance-webapp/.turbo/
-mn-compliance-webapp/.vercel/
-mn-compliance-webapp/*.tsbuildinfo
+webapp/node_modules/
+webapp/.next/
+webapp/out/
+webapp/coverage/
+webapp/.turbo/
+webapp/.vercel/
+webapp/*.tsbuildinfo
 
 # App env
-mn-compliance-webapp/.env
-mn-compliance-webapp/.env*.local
+webapp/.env
+webapp/.env*.local
