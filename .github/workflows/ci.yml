@@ -1,44 +1,36 @@
-name: CI
+name: ci
 
 on:
   push:
-    branches: [main]
   pull_request:
-    branches: [main]
 
 jobs:
-  ci:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: webapp/package-lock.json
-
-      - name: Install dependencies
-        working-directory: webapp
-        run: npm ci
-
-      - name: Lint
-        working-directory: webapp
-        run: npx eslint .
-
-      - name: Type check
-        working-directory: webapp
-        run: npx tsc --noEmit
-
-      - name: Run tests
-        working-directory: webapp
-        run: npm test
-
-      - name: Build
-        working-directory: webapp
-        run: npm run build
+          version: 9.15.4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Python deps
+        run: |
+          python -m pip install -r requirements.txt
+      - name: pytest
         env:
-          NEXT_TELEMETRY_DISABLED: 1
+          # The SDK-middleware routes (/pilot/ping, /base/finality-check) are
+          # only registered when a receive address is configured, so without
+          # this CI 404s on endpoints that exist in production and six tests
+          # fail that pass on any configured box. Public receive address, not a
+          # secret — the same value is committed in sale-watch.yml. No spend
+          # key is ever set in CI, so nothing here can move money.
+          X402_PAY_TO_ADDRESS: '0xAB745e5F576667037696e78ba7dA28E193E4423D'
+        run: python -m pytest -v
+      - name: Dashboard deps
+        working-directory: dashboard
+        run: pnpm install --frozen-lockfile || pnpm install
+      - name: vitest
+        working-directory: dashboard
+        run: pnpm vitest run
