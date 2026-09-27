@@ -1,91 +1,82 @@
-# MN Compliance Webapp Monorepo
+# 🛡️ MN Compliance Webapp Monorepo
 
-This repository contains a production-ready Next.js application for Minnesota small business compliance checks.
+[![CI Pipeline](https://github.com/kwizzlesurp10-ctrl/mn-compliance-webapp/actions/workflows/ci.yml/badge.svg)](https://github.com/kwizzlesurp10-ctrl/mn-compliance-webapp/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/kwizzlesurp10-ctrl/mn-compliance-webapp)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?logo=typescript)](https://www.typescriptlang.org/)
 
-## Repository Structure
+This repository contains a production-ready Next.js application designed to provide Minnesota small businesses with a **Compliance Quick-Check**. It features interactive forms, a mock compliance scoring engine, a "Protection Radar" visualization, and a Grok prompt generator.
 
-```
+---
+
+## 📂 Repository Structure
+
+We utilize a **monorepo-lite** pattern optimized for Vercel and GitHub. The main Next.js application resides within the `webapp/` directory, while repository-wide configuration (CI/CD, Dependabot, etc.) remains at the root.
+
+```text
 repo-root/
 ├── .github/
 │   ├── workflows/
-│   │   └── ci.yml                       # CI: lint, type-check, test, build
-│   ├── dependabot.yml
-│   └── RELEASE_CHECKLIST.md
-├── webapp/                              # The Next.js application (was mn-compliance-webapp/)
-│   ├── app/
-│   │   ├── actions/compliance.ts        # Server actions
-│   │   ├── layout.tsx                   # Root layout + Vercel Analytics
-│   │   └── page.tsx
-│   ├── components/
-│   │   ├── compliance/                  # Refactored, production-grade components
-│   │   │   ├── ComplianceForm.tsx
-│   │   │   ├── ProtectionRadar.tsx
-│   │   │   ├── ResultsDisplay.tsx
-│   │   │   ├── GrokPromptModal.tsx
-│   │   │   └── index.ts
-│   │   └── mn-compliance-home.tsx
-│   ├── lib/compliance/
-│   │   ├── schema.ts                    # Zod validation
-│   │   ├── types.ts
-│   │   ├── grok-prompt.ts
-│   │   └── generate-mock-results.ts
-│   ├── public/
-│   ├── next.config.ts                   # outputFileTracingRoot for monorepo
-│   ├── package.json
-│   └── README.md                        # App-specific documentation
-├── README.md                            # This file
-└── .gitignore
+│   │   └── ci.yml                 # CI: lint, type-check, test, build
+│   └── dependabot.yml             # Dependency security updates
+├── webapp/                        # Next.js Application Source
+│   ├── app/                       # App Router, Actions, Layouts
+│   ├── components/                # React Components (Radar, Results, etc.)
+│   ├── lib/                       # Zod Schemas, Types, Mock Data Logic
+│   └── README.md                  # App-Specific Documentation
+├── LICENSE                        # Apache 2.0 License
+└── README.md                      # This documentation
 ```
 
-## Why This Structure?
+**Why this structure?**
+Keeping the Next.js app in `webapp/` avoids cluttering the root with Node.js configuration files, providing a clean separation between repository infrastructure (GitHub Actions, IDE configs) and the application code.
 
-- The Next.js app lives in `webapp/` so the repository root can contain shared CI, GitHub configuration, and potentially other tools in the future.
-- This is a common **monorepo-lite** pattern for Vercel + GitHub projects.
-- We chose `webapp/` (instead of repeating the repo name) to avoid confusing long paths in CI runners and keep things clear.
+---
 
-## Local Development
+## 🚀 Quick Start (Local Development)
+
+To run the application locally, you will need [Node.js](https://nodejs.org/) installed.
 
 ```bash
+# 1. Navigate to the web application directory
 cd webapp
+
+# 2. Install dependencies
 npm install
+
+# 3. Start the development server
 npm run dev
 ```
 
-Open http://localhost:3000
+The application will be available at [http://localhost:3000](http://localhost:3000).
 
-## Deployment (Vercel)
+---
 
-1. In Vercel, import this repository.
-2. Set **Root Directory** to: `webapp`
-3. Vercel will automatically detect Next.js and run `npm install` + `npm run build` inside that folder.
-4. (Recommended) Add environment variable:
-   - `NEXT_PUBLIC_SITE_URL` = your production URL
+## ☁️ Deployment (Vercel)
 
-## CI / GitHub Actions
+This project is configured for seamless deployment on Vercel:
 
-The workflow (`.github/workflows/ci.yml`) runs on every push and PR:
+1. Import this repository into Vercel.
+2. Set the **Root Directory** to `webapp`.
+3. Vercel will automatically detect the Next.js framework, install dependencies, and build the project.
+4. *(Optional)* Configure the `NEXT_PUBLIC_SITE_URL` environment variable with your production URL.
 
-- Installs dependencies
-- Runs lint + TypeScript check
-- Runs Vitest tests
-- Builds the production bundle
+---
 
-All steps use `working-directory: webapp`.
+## 🛡️ Production Readiness
 
-## Production Readiness
+This repository is built with enterprise-grade standards in mind:
 
-This repo includes:
+- **Strict TypeScript & Zod Validation:** End-to-end type safety and robust payload validation via Server Actions.
+- **Automated CI/CD:** GitHub Actions workflow ensuring code quality (ESLint, Vitest, TypeScript checking) on every pull request and push.
+- **Dependency Management:** Dependabot configured for automated security updates.
+- **Performance & Analytics:** Vercel Analytics and Speed Insights integrated.
+- **Clean Architecture:** Refactored component tree prioritizing modularity and separation of concerns.
 
-- Dependabot configuration
-- Release checklist
-- Vercel Analytics + Speed Insights
-- Clean component architecture (refactored from a 649-line file)
-- Zod validation + server actions
-- Type-safe, tested codebase
+---
 
-See `webapp/README.md` for full app documentation.
+## ⚖️ Disclaimer & License
 
-## Notes
+**Disclaimer:** The scores, checklists, and compliance recommendations generated by this application are **demonstration mocks only** and do not constitute legal advice. Always verify business requirements with the MN Department of Labor and Industry, Secretary of State, Department of Revenue, and other relevant local agencies.
 
-- `.gitignore` is configured so only the relevant folders are tracked.
-- If you add another top-level project later, extend `.gitignore` accordingly.
+Distributed under the **Apache-2.0 License**. See [`LICENSE`](LICENSE) for more information.
