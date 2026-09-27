@@ -1,57 +1,63 @@
-# MN Compliance Quick-Check (Next.js)
+# 📊 MN Compliance Quick-Check App
 
-A Vercel-ready web app based on the `index_report_generator_2.html` prototype: Minnesota small-business compliance quick-check, mock scoring, “Protection Radar” UI, and a **Copy Grok prompt** flow. Business logic runs in a **server action**; inputs are validated with **Zod**.
+This directory contains the Next.js frontend and server actions for the **Minnesota Small Business Compliance Quick-Check** application. 
 
-This directory is the **Next.js app** inside a repo whose root is one level up (e.g. `/home/keef`).
+It serves as the production iteration of our initial compliance prototype, featuring interactive mock scoring, a dynamic "Protection Radar" UI, and a dedicated **Copy Grok prompt** integration for generating tailored legal/compliance queries.
 
-## Stack
+---
 
-- **Next.js 15** (App Router) + **React 19** + **TypeScript (strict)**
-- **Tailwind CSS** (no CDN in production)
-- **Zod** for form payloads
-- **Vitest** for unit tests (`lib/compliance/*`)
+## 🛠 Tech Stack
 
-## Local development
+- **Framework:** Next.js 15 (App Router)
+- **Library:** React 19
+- **Language:** TypeScript (Strict Mode)
+- **Styling:** Tailwind CSS (Optimized for production, no CDNs)
+- **Validation:** Zod (Form payloads & Server Actions)
+- **Testing:** Vitest (Unit tests located in `lib/compliance/*`)
 
-If your shell is already in **`mn-compliance-webapp/`**:
+---
 
+## 💻 Local Development
+
+Because this application lives inside a monorepo structure, ensure your terminal is in the `webapp/` directory before running Node commands.
+
+**From the repository root:**
 ```bash
+cd webapp
 npm install
 npm run dev
 ```
 
-From the **repository root** (parent of this folder):
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-```bash
-cd mn-compliance-webapp && npm install && npm run dev
-```
+> **💡 Pro-tip:** Append `?init=1` to the URL (e.g., `http://localhost:3000/?init=1`) to automatically run a demonstration compliance check without manually filling out the form.
 
-Open [http://localhost:3000](http://localhost:3000). Add `?init=1` to auto-run a demo check in the client (same idea as the static HTML’s init flag).
+---
 
-## Scripts
+## 📜 Available Scripts
 
-| Command         | Action              |
-| --------------- | ------------------- |
-| `npm run dev`   | Dev server (Turbopack) |
-| `npm run build` | Production build    |
-| `npm run start` | Run production      |
-| `npm run test`  | Vitest              |
-| `npm run lint`  | ESLint              |
+| Command         | Description                                      |
+| :-------------- | :----------------------------------------------- |
+| `npm run dev`   | Starts the development server using Turbopack.   |
+| `npm run build` | Creates an optimized production build.           |
+| `npm run start` | Starts a local server serving the production build. |
+| `npm run test`  | Runs the Vitest unit test suite.                 |
+| `npm run lint`  | Runs ESLint to check for code quality issues.    |
 
-## Deploy on Vercel (from GitHub)
+---
 
-1. **Create a new empty repository** and push the **whole repo** (root contains `mn-compliance-webapp/` and optionally other files). See the [root README](../README.md).
+## 🏗 Architecture & Data Flow
 
-2. In [Vercel](https://vercel.com) → **Import** the repository, then set **Root Directory** to **`mn-compliance-webapp`**. Use defaults for Next.js (install + build in that directory).
+1. **Client UI (`components/compliance/`)**: Users interact with `ComplianceForm.tsx`.
+2. **Validation (`lib/compliance/schema.ts`)**: Inputs are strictly validated client-side and server-side using Zod.
+3. **Server Actions (`app/actions/compliance.ts`)**: Safely handles form submissions securely on the server.
+4. **Mock Engine (`lib/compliance/generate-mock-results.ts`)**: Evaluates the payload to generate compliance scores, categorized checklists, and radar metrics.
+5. **Display (`ResultsDisplay.tsx` & `ProtectionRadar.tsx`)**: Renders the breakdown. Users can then copy an AI-ready prompt via `GrokPromptModal.tsx`.
 
-3. **Environment variable (optional):** in the Vercel project, set `NEXT_PUBLIC_SITE_URL` to your production URL. See `.env.example`.
+---
 
-4. CI at the repo root runs `npm run lint` / `test` / `build` in `mn-compliance-webapp` (see `../.github/workflows/ci.yml`).
+## ⚠️ Important Legal Notice
 
-## Not legal advice
+The output, scores, and checklists provided by this application are **demonstration mocks**. They do not represent official compliance status and **are not legal advice**. 
 
-The scores and checklists are **demonstration mocks**. Always confirm requirements with **MN DOLI**, **Secretary of State**, **Revenue**, and local agencies.
-
-## License
-
-Private / use as you like for your own deployment.
+Always confirm actual requirements and regulations with the **MN Department of Labor and Industry (DOLI)**, the **Secretary of State**, the **Department of Revenue**, and other relevant local, state, or federal agencies.

@@ -4,8 +4,8 @@
 !/README.md
 !/.github/
 !/.github/**
-!/mn-compliance-webapp/
-!/mn-compliance-webapp/**
+!/webapp/
+!/webapp/**
 
 # Next / Node (inside app)
 mn-compliance-webapp/node_modules/
